@@ -1,7 +1,7 @@
 # Личный проект «Типотека» [![Build status][travis-image]][travis-url]
 
 * Студент: [Сергей Шершнев](https://up.htmlacademy.ru/nodejs/3/user/587797).
-* Наставник: `Неизвестно`.
+* Наставник: [Ринат Мухамедгалиев](https://htmlacademy.ru/profile/id779003).
 
 ---
 
