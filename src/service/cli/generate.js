@@ -73,7 +73,7 @@ const generateOffers = (offersNumber) => {
     title: TITLES[getRandomInt(0, TITLES.length - 1)],
     announce: shuffleArray(Sentences.VALUES).slice(1, Sentences.MAX_ANNOUNCE_VALUE).join(` `),
     fullText: shuffleArray(Sentences.VALUES).slice(1, Sentences.VALUES.length - 1).join(` `),
-    createdDate: moment(Date.now() - getRandomInt(0, MONTH_MILLISECONDS)).format(`YYYY-MM-DD HH-mm-ss`),
+    createdDate: moment(Date.now() - getRandomInt(0, (MONTH_MILLISECONDS * 3))).format(`YYYY-MM-DD HH-mm-ss`),
     category: shuffleArray(CATEGORIES).slice(1, getRandomInt(1, CATEGORIES.length - 1))
   }));
 };
