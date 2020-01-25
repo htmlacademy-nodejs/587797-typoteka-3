@@ -15,3 +15,4 @@ node_modules/
 build/
 
 #ignore mocks.json file
+mocks.json
