@@ -10,7 +10,9 @@ const {
 const {
   DEFAULT_OFFER_NUMBER,
   MOCK_FILE_PATH,
-  MONTH_MILLISECONDS
+  MONTH_MILLISECONDS,
+  ExitCode,
+  MAX_MOCK_OBJECT_NUMBER
 } = require(`../../constants`);
 
 const fs = require(`fs`);
@@ -84,19 +86,19 @@ module.exports = {
     const [offersNumberFromUser] = args;
     const offersNumber = Number(offersNumberFromUser) || DEFAULT_OFFER_NUMBER;
 
-    if (offersNumber > 1000) {
-      console.info(`No more than 1000 advertisements`);
-      process.exit(0);
+    if (offersNumber > MAX_MOCK_OBJECT_NUMBER) {
+      console.info(`No more than ${MAX_MOCK_OBJECT_NUMBER} advertisements`);
+      process.exit(ExitCode.SUCCESS);
     }
 
     fs.writeFile(MOCK_FILE_PATH, JSON.stringify(generateOffers(offersNumber)), (error) => {
       if (error) {
         console.error(`Can't write data to file...`);
-        process.exit(1);
+        process.exit(ExitCode.FAIL);
       }
 
       console.info(`Operation success. File created`);
-      process.exit(0);
+      process.exit(ExitCode.SUCCESS);
     });
   }
 };
