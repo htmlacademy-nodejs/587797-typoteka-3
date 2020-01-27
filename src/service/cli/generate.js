@@ -1,5 +1,6 @@
 'use strict';
 
+const chalk = require(`chalk`);
 const moment = require(`moment`);
 
 const {
@@ -87,17 +88,17 @@ module.exports = {
     const offersNumber = Number(offersNumberFromUser) || DEFAULT_OFFER_NUMBER;
 
     if (offersNumber > MAX_MOCK_OBJECT_NUMBER) {
-      console.info(`No more than ${MAX_MOCK_OBJECT_NUMBER} advertisements`);
+      console.info(chalk.green(`No more than ${MAX_MOCK_OBJECT_NUMBER} advertisements`));
       process.exit(ExitCode.SUCCESS);
     }
 
     fs.writeFile(MOCK_FILE_PATH, JSON.stringify(generateOffers(offersNumber)), (error) => {
       if (error) {
-        console.error(`Can't write data to file...`);
+        console.error(chalk.red(`Can't write data to file...`));
         process.exit(ExitCode.FAIL);
       }
 
-      console.info(`Operation success. File created`);
+      console.info(chalk.green(`Operation success. File created`));
       process.exit(ExitCode.SUCCESS);
     });
   }
