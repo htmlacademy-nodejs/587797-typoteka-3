@@ -1,5 +1,6 @@
 'use strict';
 
+const chalk = require(`chalk`);
 const moment = require(`moment`);
 
 const {
@@ -15,7 +16,7 @@ const {
   MAX_MOCK_OBJECT_NUMBER
 } = require(`../../constants`);
 
-const fs = require(`fs`);
+const fs = require(`fs`).promises;
 
 const TITLES = [
   `Ёлки. История деревьев`,
@@ -82,23 +83,23 @@ const generateOffers = (offersNumber) => {
 
 module.exports = {
   name: `--generate`,
-  run(args) {
+  async run(args) {
     const [offersNumberFromUser] = args;
     const offersNumber = Number(offersNumberFromUser) || DEFAULT_OFFER_NUMBER;
 
     if (offersNumber > MAX_MOCK_OBJECT_NUMBER) {
-      console.info(`No more than ${MAX_MOCK_OBJECT_NUMBER} advertisements`);
+      console.info(chalk.green(`No more than ${MAX_MOCK_OBJECT_NUMBER} advertisements`));
       process.exit(ExitCode.SUCCESS);
     }
 
-    fs.writeFile(MOCK_FILE_PATH, JSON.stringify(generateOffers(offersNumber)), (error) => {
-      if (error) {
-        console.error(`Can't write data to file...`);
-        process.exit(ExitCode.FAIL);
-      }
+    try {
+      await fs.writeFile(MOCK_FILE_PATH, JSON.stringify(generateOffers(offersNumber)));
+    } catch (error) {
+      console.error(chalk.red(`Can't write data to file...`));
+      process.exit(ExitCode.FAIL);
+    }
 
-      console.info(`Operation success. File created`);
-      process.exit(ExitCode.SUCCESS);
-    });
+    console.info(chalk.green(`Operation success. File created`));
+    process.exit(ExitCode.SUCCESS);
   }
 };
