@@ -1,8 +1,22 @@
-const {Router} = require('express');
+'use strict';
 
-myRouter = Router();
+const {Router} = require(`express`);
 
-myRouter.get('/', (req, res) => res.send(req.originalUrl));
-myRouter.get('/comments', (req, res) => res.send(req.originalUrl));
+const myRouter = new Router();
+
+myRouter.get(`/`, (req, res) => {
+  res.render(`my/my`, {
+    user: {
+      role: `author`
+    }
+  });
+});
+myRouter.get(`/comments`, (req, res) => {
+  res.render(`my/comments`, {
+    user: {
+      role: `author`
+    }
+  });
+});
 
 module.exports = myRouter;
