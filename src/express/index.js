@@ -23,24 +23,28 @@ app.use(`/`, mainRouter);
 app.use(`/articles`, articlesRouter);
 app.use(`/my`, myRouter);
 
-app.listen(PORT);
-
 app.use((req, res, next) => {
-  res
-    .status(HttpCode.NOT_FOUND)
-    .render(`errors/400`, {
-      errorCode: HttpCode.NOT_FOUND
-    });
+  res.status(HttpCode.NOT_FOUND).render(`errors/400`, {
+    errorCode: HttpCode.NOT_FOUND
+  });
 
   next();
 });
 
 app.use((err, req, res, next) => {
-  res
-    .status(HttpCode.INTERNAL_ERROR)
-    .render(`errors/500`, {
-      errorCode: HttpCode.INTERNAL_ERROR
-    });
+  res.status(HttpCode.INTERNAL_ERROR).render(`errors/500`, {
+    errorCode: HttpCode.INTERNAL_ERROR
+  });
 
   next();
+});
+
+app.listen(PORT, (error) => {
+  if (error) {
+    if (error) {
+      console.info(`Ошибка при запуске сервера`, error);
+    }
+
+    console.info(`Ожидаю соединений на порт ${PORT}`);
+  }
 });
