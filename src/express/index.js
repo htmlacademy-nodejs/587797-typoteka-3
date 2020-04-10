@@ -1,93 +1,50 @@
 'use strict';
 
+const path = require(`path`);
 const express = require(`express`);
 
+const mainRouter = require(`./routes/main`);
 const articlesRouter = require(`./routes/articles`);
 const myRouter = require(`./routes/my`);
 
 const PORT = 8080;
+const {HttpCode} = require(`../constants`);
+const PUBLIC_DIR = `public`;
+const TEMPLATES_DIR = `templates`;
 
 const app = express();
 
-app.use(express.static(`markup`));
+app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
 
-app.set(`views`, __dirname + `/templates`);
+app.set(`views`, path.resolve(__dirname, TEMPLATES_DIR));
 app.set(`view engine`, `pug`);
 
+app.use(`/`, mainRouter);
 app.use(`/articles`, articlesRouter);
 app.use(`/my`, myRouter);
 
-app.get(`/`, (req, res) => {
-  res.render(`main`, {
-    user: {
-      role: `author`
-    },
-    mostCommented: [],
-    lastComments: [],
-    articles: []
-  });
-});
-app.get(`/register`, (req, res) => {
-  res.render(`sign-up`);
-});
-app.get(`/login`, (req, res) => {
-  res.render(`login`);
-});
-app.get(`/search`, (req, res) => {
-  res.render(`search`, {
-    user: {
-      role: `author`
-    }
-  });
-});
-app.get(`/categories`, (req, res) => {
-  res.render(`all-categories`, {
-    user: {
-      role: `author`
-    },
-    categories: [
-      {
-        id: 1,
-        title: `Жизнь и путешествия`
-      },
-      {
-        id: 2,
-        title: `Путешествия`
-      },
-      {
-        id: 3,
-        title: `Дизайн и программирование`
-      },
-      {
-        id: 4,
-        title: `Другое`
-      },
-      {
-        id: 5,
-        title: `Личное`
-      }
-    ]
-  });
-});
-
-app.listen(PORT);
-
 app.use((req, res, next) => {
-  res
-    .status(404)
-    .render(`errors/400`, {
-      errorCode: 404
-    });
+  res.status(HttpCode.NOT_FOUND).render(`errors/400`, {
+    errorCode: HttpCode.NOT_FOUND
+  });
 
   next();
 });
 
 app.use((err, req, res, next) => {
-  res
-    .status(500)
-    .render(`errors/500`, {
-      errorCode: 500
-    });
+  res.status(HttpCode.INTERNAL_ERROR).render(`errors/500`, {
+    errorCode: HttpCode.INTERNAL_ERROR
+  });
 
   next();
+});
+
+app.listen(PORT, (error) => {
+  if (error) {
+    if (error) {
+      console.info(`Ошибка при запуске сервера`, error);
+    }
+
+    console.info(`Ожидаю соединений на порт ${PORT}`);
+  }
 });
