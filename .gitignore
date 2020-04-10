@@ -15,7 +15,7 @@ node_modules/
 build/
 
 # markup dir
-markup1
+markup
 
 #ignore mocks.json file
 mocks.json
