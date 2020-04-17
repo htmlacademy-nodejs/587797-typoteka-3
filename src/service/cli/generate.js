@@ -24,6 +24,7 @@ const MAX_ANNOUNCE_VALUE = 5;
 
 const generateOffers = (offersNumber, titles, categories, sentences, commentsText) => {
   return Array(offersNumber).fill({}).map(() => ({
+    id: nanoid(),
     title: titles[getRandomInt(0, titles.length - 1)],
     announce: shuffleArray(sentences).slice(1, MAX_ANNOUNCE_VALUE).join(` `),
     fullText: shuffleArray(sentences).slice(1, sentences.length - 1).join(` `),
