@@ -7,6 +7,7 @@ const {
 } = require(`../../constants`);
 
 const postsRouter = require(`../routes/posts`);
+const categoriesRouter = require(`../routes/categories`);
 
 const DEFAULT_PORT = 3000;
 
@@ -14,6 +15,7 @@ const app = express();
 app.use(express.json());
 
 app.use(`/posts`, postsRouter);
+app.use(`/api/categories`, categoriesRouter);
 
 app.use((req, res) => res
   .status(HttpCode.NOT_FOUND)

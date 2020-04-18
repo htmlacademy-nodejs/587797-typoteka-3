@@ -1,12 +1,14 @@
 'use strict';
 
+const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 const moment = require(`moment`);
 const {nanoid} = require(`nanoid`);
 
 const {
   getRandomInt,
-  shuffleArray
+  shuffleArray,
+  readContent
 } = require(`../../utils`);
 
 const {
@@ -17,8 +19,6 @@ const {
   MAX_MOCK_OBJECT_NUMBER,
   FilePath
 } = require(`../../constants`);
-
-const fs = require(`fs`).promises;
 
 const MAX_ANNOUNCE_VALUE = 5;
 
@@ -32,18 +32,6 @@ const generateOffers = (offersNumber, titles, categories, sentences, commentsTex
     category: shuffleArray(categories).slice(1, getRandomInt(1, categories.length - 1)),
     comments: generateComments(getRandomInt(1, 5), commentsText)
   }));
-};
-
-const readContent = async (filePath) => {
-  try {
-    const content = await fs.readFile(filePath, `utf8`);
-
-    return content.split(`\n`);
-  } catch (error) {
-    console.log(chalk.red(error));
-
-    return [];
-  }
 };
 
 const generateComments = (count, commentsText) => {
