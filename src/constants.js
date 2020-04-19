@@ -13,6 +13,10 @@ module.exports = {
   MAX_MOCK_OBJECT_NUMBER: 1000,
   HttpCode: {
     OK: 200,
+    SUCCESS_POST: 201,
+    SUCCESS_DELETE: 204,
+    WRONG_QUERY: 400,
+    BAD_AUTH: 401,
     NOT_FOUND: 404,
     INTERNAL_ERROR: 500
   },

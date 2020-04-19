@@ -25,7 +25,7 @@ const getCategories = async () => {
   return categories;
 };
 
-class CategoriesRepository {
+class Categories {
   async getAll() {
     const result = await getCategories();
     if (result.length === 0) {
@@ -44,4 +44,4 @@ class CategoriesRepository {
   }
 }
 
-module.exports = new CategoriesRepository();
+module.exports = new Categories();

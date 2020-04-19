@@ -1,6 +1,6 @@
 'use strict';
 
-const CategoriesRepository = require(`../repositories/categoriesRepository`);
+const CategoriesRepository = require(`../repositories/categories`);
 
 const {
   HttpCode,

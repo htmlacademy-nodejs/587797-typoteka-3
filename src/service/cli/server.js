@@ -6,7 +6,7 @@ const {
   HttpCode,
 } = require(`../../constants`);
 
-const postsRouter = require(`../routes/posts`);
+const articlesRouter = require(`../routes/articles`);
 const categoriesRouter = require(`../routes/categories`);
 
 const DEFAULT_PORT = 3000;
@@ -14,7 +14,7 @@ const DEFAULT_PORT = 3000;
 const app = express();
 app.use(express.json());
 
-app.use(`/posts`, postsRouter);
+app.use(`/api/articles`, articlesRouter);
 app.use(`/api/categories`, categoriesRouter);
 
 app.use((req, res) => res
