@@ -8,6 +8,7 @@ const {
 
 const articlesRouter = require(`../routes/articles`);
 const categoriesRouter = require(`../routes/categories`);
+const searchRouter = require(`../routes/search`);
 
 const DEFAULT_PORT = 3000;
 
@@ -16,6 +17,7 @@ app.use(express.json());
 
 app.use(`/api/articles`, articlesRouter);
 app.use(`/api/categories`, categoriesRouter);
+app.use(`/api/search`, searchRouter);
 
 app.use((req, res) => res
   .status(HttpCode.NOT_FOUND)

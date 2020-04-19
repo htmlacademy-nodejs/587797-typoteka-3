@@ -224,6 +224,17 @@ class Articles {
     };
   }
 
+  async searchByTitle(query) {
+    const articles = await getArticles();
+
+    const foundOffers = articles.filter((article) => article.title.indexOf(query) !== -1);
+
+    return {
+      isSuccess: true,
+      body: foundOffers
+    };
+  }
+
   _isValidArticlePostData(data) {
     const formField = Object.keys(data);
 
