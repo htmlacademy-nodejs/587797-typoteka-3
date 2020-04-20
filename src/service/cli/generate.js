@@ -1,11 +1,14 @@
 'use strict';
 
+const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 const moment = require(`moment`);
+const {nanoid} = require(`nanoid`);
 
 const {
   getRandomInt,
-  shuffleArray
+  shuffleArray,
+  readContent
 } = require(`../../utils`);
 
 const {
@@ -13,37 +16,31 @@ const {
   MOCK_FILE_PATH,
   MONTH_MILLISECONDS,
   ExitCode,
-  MAX_MOCK_OBJECT_NUMBER
+  MAX_MOCK_OBJECT_NUMBER,
+  FilePath
 } = require(`../../constants`);
-
-const FILE_SENTENCES_PATH = `./data/sentences.txt`;
-const FILE_TITLES_PATH = `./data/titles.txt`;
-const FILE_CATEGORIES_PATH = `./data/categories.txt`;
-
-const fs = require(`fs`).promises;
 
 const MAX_ANNOUNCE_VALUE = 5;
 
-const generateOffers = (offersNumber, titles, categories, sentences) => {
+const generateOffers = (offersNumber, titles, categories, sentences, commentsText) => {
   return Array(offersNumber).fill({}).map(() => ({
+    id: nanoid(),
     title: titles[getRandomInt(0, titles.length - 1)],
     announce: shuffleArray(sentences).slice(1, MAX_ANNOUNCE_VALUE).join(` `),
     fullText: shuffleArray(sentences).slice(1, sentences.length - 1).join(` `),
     createdDate: moment(Date.now() - getRandomInt(0, (MONTH_MILLISECONDS * 3))).format(`YYYY-MM-DD HH-mm-ss`),
-    category: shuffleArray(categories).slice(1, getRandomInt(1, categories.length - 1))
+    category: shuffleArray(categories).slice(1, getRandomInt(1, categories.length - 1)),
+    comments: generateComments(getRandomInt(1, 5), commentsText)
   }));
 };
 
-const readContent = async (filePath) => {
-  try {
-    const content = await fs.readFile(filePath, `utf8`);
-
-    return content.split(`\n`);
-  } catch (error) {
-    console.log(chalk.red(error));
-
-    return [];
-  }
+const generateComments = (count, commentsText) => {
+  return Array(count).fill({}).map(() => {
+    return {
+      id: nanoid(),
+      text: shuffleArray(commentsText).slice(1, count).join(` `)
+    };
+  });
 };
 
 module.exports = {
@@ -57,12 +54,13 @@ module.exports = {
       process.exit(ExitCode.SUCCESS);
     }
 
-    const titles = await readContent(FILE_TITLES_PATH);
-    const categories = await readContent(FILE_CATEGORIES_PATH);
-    const sentences = await readContent(FILE_SENTENCES_PATH);
+    const titles = await readContent(FilePath.TITLES);
+    const categories = await readContent(FilePath.CATEGORIES);
+    const sentences = await readContent(FilePath.SENTENCES);
+    const commentsText = await readContent(FilePath.COMMENTS_TEXT);
 
     try {
-      await fs.writeFile(MOCK_FILE_PATH, JSON.stringify(generateOffers(offersNumber, titles, categories, sentences)));
+      await fs.writeFile(MOCK_FILE_PATH, JSON.stringify(generateOffers(offersNumber, titles, categories, sentences, commentsText)));
     } catch (error) {
       console.error(chalk.red(`Can't write data to file...`));
       process.exit(ExitCode.FAIL);
