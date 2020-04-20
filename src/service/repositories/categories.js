@@ -13,21 +13,23 @@ const {
 let categories = [];
 let isCalled = false;
 
-const getCategories = async () => {
-  if (categories.length === 0 && !isCalled) {
-    try {
-      categories = await readContent(FilePath.CATEGORIES);
-    } catch (error) {
-      console.error(chalk.red(error));
-    }
+class Categories {
+  get _categories() {
+    return (async function () {
+      if (categories.length === 0 && !isCalled) {
+        try {
+          categories = await readContent(FilePath.CATEGORIES);
+        } catch (error) {
+          console.error(chalk.red(error));
+        }
+      }
+
+      return categories;
+    })();
   }
 
-  return categories;
-};
-
-class Categories {
   async getAll() {
-    const result = await getCategories();
+    const result = await this._categories;
     if (result.length === 0) {
       return {
         isSuccess: false,

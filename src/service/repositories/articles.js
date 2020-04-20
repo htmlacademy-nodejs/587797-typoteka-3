@@ -11,28 +11,30 @@ const {
 let articlesData = [];
 let isCalled = false;
 
-const getArticles = async () => {
-  if (articlesData.length === 0 && !isCalled) {
-    try {
-      articlesData = await fs.readFile(MOCK_FILE_PATH, `utf8`);
-      articlesData = JSON.parse(articlesData);
-      isCalled = true;
-    } catch (error) {
-      console.error(chalk.red(error));
-    }
-  }
-
-  return articlesData;
-};
-
 class Articles {
   constructor() {
     this._requiredArticlesFields = [`title`, `announce`, `fullText`, `createdDate`, `category`];
     this._commentRequiredFields = [`text`];
   }
 
+  get _articlesData() {
+    return (async function () {
+      if (articlesData.length === 0 && !isCalled) {
+        try {
+          articlesData = await fs.readFile(MOCK_FILE_PATH, `utf8`);
+          articlesData = JSON.parse(articlesData);
+          isCalled = true;
+        } catch (error) {
+          console.error(chalk.red(error));
+        }
+      }
+
+      return articlesData;
+    })();
+  }
+
   async getById(articleId) {
-    const articles = await getArticles();
+    const articles = await this._articlesData;
     const foundArticle = articles.find((article) => article.id === articleId);
 
     if (foundArticle === undefined) {
@@ -51,7 +53,7 @@ class Articles {
   }
 
   async getAll() {
-    const articles = await getArticles();
+    const articles = await this._articlesData;
 
     if (articles.length === 0) {
       return {
@@ -69,7 +71,7 @@ class Articles {
   }
 
   async delete(articleId) {
-    const articles = await getArticles();
+    const articles = await this._articlesData;
     const response = await this.getById(articleId);
 
     if (!response.isSuccess) {
@@ -100,7 +102,7 @@ class Articles {
         comments: []
       }, data);
 
-      const result = await getArticles();
+      const result = await this._articlesData;
 
       result.push(newArticle);
 
@@ -225,7 +227,7 @@ class Articles {
   }
 
   async searchByTitle(query) {
-    const articles = await getArticles();
+    const articles = await this._articlesData;
 
     const foundOffers = articles.filter((article) => article.title.indexOf(query) !== -1);
 
