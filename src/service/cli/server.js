@@ -21,7 +21,7 @@ app.use((req, res, next) => {
   logger.debug(`New request. Url: ${req.url}`);
   const onResponseFinish = () => {
     logger.info(`Request finished with code: ${res.statusCode}`);
-    logger.info(`All response info: ${res.toString()}`); // как распечатать объект, чтобы не было All response info: [object Object]
+    logger.info(`All response info: ${res.toString()}`); // @todo как распечатать объект, чтобы не было All response info: [object Object]
     res.removeListener(`finish`, onResponseFinish);
   };
   res.on(`finish`, onResponseFinish);
@@ -37,7 +37,7 @@ app.use((req, res) => {
   res.status(HttpCode.NOT_FOUND).send(`Not found`);
 });
 
-app.use((error, req, res, next) => { // Если поместить throw new Error в один из обработчиков маршрута - сюда мы так и не попадаем
+app.use((error, req, res, next) => { // @todo Если поместить throw new Error в один из обработчиков маршрута - сюда мы так и не попадаем
   logger.error(`Caught unexpected error for url: ${req.url}. Error: ${error}`);
   res.status(HttpCode.INTERNAL_ERROR).send(`Server internal error!@!@`);
 });
