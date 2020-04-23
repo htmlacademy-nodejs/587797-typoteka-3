@@ -7,7 +7,8 @@
     "test": "npm run test::rest & npm run eslint",
     "eslint": "eslint --ext .js src/service",
     "start": "node ./src/service/service.js",
-    "server": "nodemon ./src/service/service.js --server 3000",
+    "server": "nodemon ./src/service/service.js --server 3000 | pino-pretty",
+    "server::debug": "LOG_LEVEL=debug nodemon ./src/service/service.js --server 3000 | pino-pretty",
     "start-front-server": "nodemon ./src/express/index.js",
     "test::rest": "jest"
   },
@@ -33,6 +34,8 @@
     "express": "4.17.1",
     "moment": "2.24.0",
     "nanoid": "3.1.3",
+    "pino": "6.2.0",
+    "pino-pretty": "4.0.0",
     "pug": "2.0.4"
   }
 }
