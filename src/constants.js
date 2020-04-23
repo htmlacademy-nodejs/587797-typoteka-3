@@ -28,5 +28,9 @@ module.exports = {
     TITLES: `./data/titles.txt`,
     CATEGORIES: `./data/categories.txt`,
     COMMENTS_TEXT: `./data/comments_text.txt`
+  },
+  ContentTypeRegExp: {
+    HTML: /text\/html/,
+    JSON: /application\/json/
   }
 };
