@@ -29,7 +29,7 @@ const generateOffers = (offersNumber, titles, categories, sentences, commentsTex
     announce: shuffleArray(sentences).slice(1, MAX_ANNOUNCE_VALUE).join(` `),
     fullText: shuffleArray(sentences).slice(1, sentences.length - 1).join(` `),
     createdDate: moment(Date.now() - getRandomInt(0, (MONTH_MILLISECONDS * 3))).format(`YYYY-MM-DD HH-mm-ss`),
-    category: shuffleArray(categories).slice(1, getRandomInt(1, categories.length - 1)),
+    categories: shuffleArray(categories).slice(0, getRandomInt(1, 3)),
     comments: generateComments(getRandomInt(1, 5), commentsText)
   }));
 };

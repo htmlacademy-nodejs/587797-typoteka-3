@@ -1,18 +1,32 @@
 'use strict';
 
+const axios = require(`axios`);
+const moment = require(`moment`);
+
+const {
+  BASE_API_URL
+} = require(`../../constants`);
+
 const {Router} = require(`express`);
 
 const mainRouter = new Router();
 
-mainRouter.get(`/`, (req, res) => {
-  res.render(`main/main`, {
-    user: {
-      role: `author`
-    },
-    mostCommented: [],
-    lastComments: [],
-    articles: []
-  });
+mainRouter.get(`/`, async (req, res, next) => {
+  try {
+    const response = await axios.get(`${BASE_API_URL}/articles/`);
+
+    res.render(`main/main`, {
+      user: {
+        role: `author`
+      },
+      mostCommented: [],
+      lastComments: [],
+      articles: response.data,
+      moment
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 mainRouter.get(`/register`, (req, res) => {

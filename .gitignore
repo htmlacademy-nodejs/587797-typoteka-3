@@ -19,3 +19,6 @@ markup
 
 #ignore mocks.json file
 mocks.json
+
+src/service/logs/*.txt
+src/express/logs/*.txt
