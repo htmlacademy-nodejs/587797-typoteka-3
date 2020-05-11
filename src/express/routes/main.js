@@ -37,11 +37,21 @@ mainRouter.get(`/login`, (req, res) => {
   res.render(`main/login`);
 });
 
-mainRouter.get(`/search`, (req, res) => {
+mainRouter.get(`/search`, async (req, res) => {
+  const searchingText = (req.query.search || ``).trim();
+  let articles = [];
+  if (searchingText.length > 0) {
+    const response = await axios.get(`${BASE_API_URL}/search/?query=${encodeURI(searchingText)}`);
+    articles = response.data;
+  }
+
   res.render(`main/search`, {
     user: {
       role: `author`
-    }
+    },
+    search: searchingText || ``,
+    articles,
+    moment
   });
 });
 
