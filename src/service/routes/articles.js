@@ -13,7 +13,6 @@ const ArticlesRepository = require(`../repositories/articles`);
 articlesRouter
   .get(`/`, async (req, res) => {
     const response = await ArticlesRepository.getAll();
-    console.log(response.data);
 
     if (response.isSuccess) {
       res.json(response.body);
