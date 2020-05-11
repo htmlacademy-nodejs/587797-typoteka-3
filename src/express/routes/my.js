@@ -22,11 +22,15 @@ myRouter.get(`/`, async (req, res) => {
     moment
   });
 });
-myRouter.get(`/comments`, (req, res) => {
+myRouter.get(`/comments`, async (req, res) => {
+  const articlesResponse = await axios.get(`${BASE_API_URL}/articles/`);
+  const comments = articlesResponse.data.reduce((accumulator, article) => accumulator.concat(article.comments), []);
+
   res.render(`my/comments`, {
     user: {
       role: `author`
-    }
+    },
+    comments
   });
 });
 

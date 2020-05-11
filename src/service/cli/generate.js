@@ -36,6 +36,7 @@ const generateOffers = (offersNumber, titles, categories, sentences, commentsTex
 
 const generateComments = (count, commentsText) => {
   return Array(count).fill({}).map(() => {
+    // console.log(count, commentsText);
     return {
       id: nanoid(),
       text: shuffleArray(commentsText).slice(1, count).join(` `)
@@ -57,7 +58,8 @@ module.exports = {
     const titles = await readContent(FilePath.TITLES);
     const categories = await readContent(FilePath.CATEGORIES);
     const sentences = await readContent(FilePath.SENTENCES);
-    const commentsText = await readContent(FilePath.COMMENTS_TEXT);
+    let commentsText = await readContent(FilePath.COMMENTS_TEXT);
+    commentsText = commentsText.filter((text) => text.length > 0);
 
     try {
       await fs.writeFile(MOCK_FILE_PATH, JSON.stringify(generateOffers(offersNumber, titles, categories, sentences, commentsText)));
