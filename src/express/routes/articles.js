@@ -1,5 +1,11 @@
 'use strict';
 
+const axios = require(`axios`);
+
+const {
+  BASE_API_URL
+} = require(`../../constants`);
+
 const {Router} = require(`express`);
 
 const articlesRouter = new Router();
@@ -58,7 +64,15 @@ articlesRouter.get(`/category/:id`, (req, res) => {
     ]
   });
 });
-articlesRouter.get(`/edit/:id`, (req, res) => res.send(req.originalUrl));
+articlesRouter.get(`/edit/:id`, async (req, res) => {
+  const response = await axios.get(`${BASE_API_URL}/articles/${req.params.id}`);
+  res.render(`articles/edit-post`, {
+    title: `post-page`,
+    user: {},
+    comments: [],
+    article: response.data
+  });
+});
 articlesRouter.get(`/:id`, (req, res) => {
   res.render(`articles/post`, {
     title: `post-page`,
