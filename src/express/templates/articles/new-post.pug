@@ -18,14 +18,14 @@ block content
             | Закрыть
             | окно
           .new-publication__form.form
-            form(action='#', method='get')
+            form(action='', method='post')
               .form__wrapper.form__wrapper--intro
                 .form__field
                   label
-                    input(type='text', placeholder='Заголовок', required='')
+                    input(type='text', placeholder='Заголовок', name='title', required='')
                 .form__field.form__field--post-image
                   label
-                    input#image-name-field(type='text', placeholder='Фотография', readonly='')
+                    input#image-name-field(type='text', placeholder='Фотография', name='picture', readonly='')
                   .form__image-loader.form__image-loader--publication
                     label
                       input.visually-hidden(type='file')
@@ -34,9 +34,9 @@ block content
               .form__wrapper.form__wrapper--text
                 .form__field.form__field--publication-text
                   label
-                    textarea(rows='1', placeholder='Анонс публикации')
+                    textarea(rows='1', placeholder='Анонс публикации' name='announce')
                 .form__field.form__field--publication-text
                   label
-                    textarea(rows='1', placeholder='Полный текст публикации')
+                    textarea(rows='1', placeholder='Полный текст публикации', name='fullText')
       .modal__overlay
 

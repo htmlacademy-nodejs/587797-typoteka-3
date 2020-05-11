@@ -1,6 +1,11 @@
 'use strict';
 
 const axios = require(`axios`);
+const path = require(`path`);
+const multer = require(`multer`);
+const upload = multer({
+  dest: path.resolve(__dirname, `../public/img`)
+});
 
 const {
   BASE_API_URL
@@ -10,18 +15,26 @@ const {Router} = require(`express`);
 
 const articlesRouter = new Router();
 
-articlesRouter.get(`/add`, (req, res) => {
-  res.render(`articles/new-post`, {
-    title: `post-page`,
-    user: {
-      role: `author`
-    },
-    comments: [],
-    post: {
-      image: `1`
+articlesRouter
+  .get(`/add`, (req, res) => {
+    res.render(`articles/new-post`, {
+      title: `post-page`,
+      user: {
+        role: `author`
+      },
+      article: {}
+    });
+  })
+  .post(`/add`, upload.single(`picture`), (req, res, next) => {
+    const requiredFields = [`title`, `announce`, `fullText`];
+
+    try {
+      const picture = req.file;
+      const fields = req.body;
+    } catch (error) {
+      next(error);
     }
   });
-});
 articlesRouter.get(`/category/:id`, (req, res) => {
   res.render(`articles/articles-by-category`, {
     activeCategory: 3,
