@@ -4,6 +4,11 @@ const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 const moment = require(`moment`);
 const {nanoid} = require(`nanoid`);
+const pictures = [
+  `sea@1x.webp`,
+  `skyscraper@1x.webp`,
+  `forest@1x.webp`
+];
 
 const {
   getRandomInt,
@@ -30,7 +35,8 @@ const generateOffers = (offersNumber, titles, categories, sentences, commentsTex
     fullText: shuffleArray(sentences).slice(1, sentences.length - 1).join(` `),
     createdDate: moment(Date.now() - getRandomInt(0, (MONTH_MILLISECONDS * 3))).format(`YYYY-MM-DD HH-mm-ss`),
     categories: shuffleArray(categories).slice(0, getRandomInt(1, 3)),
-    comments: generateComments(getRandomInt(1, 5), commentsText)
+    comments: generateComments(getRandomInt(1, 5), commentsText),
+    picture: pictures[getRandomInt(0, pictures.length - 1)]
   }));
 };
 

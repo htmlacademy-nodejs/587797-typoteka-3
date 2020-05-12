@@ -116,7 +116,7 @@ block content
                   li.preview__breadcrumbs-item
                     a.preview__breadcrumbs-link(href='#')=category
               .preview__background
-                img.preview__background-image(src='img/skyscraper@1x.jpg', width='460', height='240', alt='Фотография небоскреба')
+                img.preview__background-image(src=`img/articles/${article.picture}`, width='460', height='240', alt='Фотография небоскреба')
               time.preview__time(datetime=moment(article.createdDate, `YYYY-MM-DD HH:mm:ss`).format(`YYYY-MM-DDTHH:mm`))=moment(article.createdDate, `YYYY-MM-DD HH:mm:ss`).format(`DD.MM.YYYY, HH:mm`)
 
               h3.preview__name
