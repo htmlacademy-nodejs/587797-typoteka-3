@@ -22,3 +22,6 @@ mocks.json
 
 src/service/logs/*.txt
 src/express/logs/*.txt
+
+src/express/tmp/*
+!src/express/tmp/.gitkeep

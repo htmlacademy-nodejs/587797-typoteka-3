@@ -39,12 +39,16 @@ articlesRouter
     });
   })
   .post(`/add`, upload.single(`picture`), async (req, res, next) => {
+    let newFileName = null;
     let newFilePath = null;
-    const requiredFields = [`title`, `announce`, `fullText`];
+    const requiredFields = [`title`, `announce`, `created`];
 
     try {
+      if (req.body === undefined) {
+        throw new Error(`Can't find body`);
+      }
+
       logger.debug({message: `Got body`, content: req.body});
-      logger.debug({message: `Got file`, content: req.file});
 
       const keysFromForm = Object.keys(req.body);
 
@@ -55,28 +59,34 @@ articlesRouter
         Required fields: ${requiredFields.toString()}`);
       }
 
-      const {
-        mimetype: mimeType,
-        size,
-        path: filePath,
-        originalname: originalName,
-        filename: generatedName
-      } = req.file;
+      logger.debug(`Form fields are valid`);
 
-      if (size === 0 || ![`image/jpeg`, `image/png`, `image/webp`].includes(mimeType)) {
-        throw new InvalidFormException(`Empty file or bad mime type. Size ${size}, mimetype: ${mimeType}`);
+      if (req.file !== undefined) {
+        logger.debug({message: `Got file`, content: req.file});
+
+        const {
+          mimetype: mimeType,
+          size,
+          path: filePath,
+          originalname: originalName,
+          filename: generatedName
+        } = req.file;
+
+        if (size === 0 || ![`image/jpeg`, `image/png`, `image/webp`].includes(mimeType)) {
+          throw new InvalidFormException(`Empty file or bad mime type. Size ${size}, mimetype: ${mimeType}`);
+        }
+
+        newFileName = `${generatedName}.${mime.getExtension(mimeType)}`;
+        newFilePath = path.resolve(ARTICLES_PICTURES_DIR, newFileName);
+
+        await fs.promises.rename(filePath, newFilePath);
+        logger.info(`File successfully renamed. Original filename: ${originalName}, generated filename: ${newFileName}`);
       }
-
-      const newFileName = `${generatedName}.${mime.getExtension(mimeType)}`;
-      newFilePath = path.resolve(ARTICLES_PICTURES_DIR, newFileName);
-
-      await fs.promises.rename(filePath, newFilePath);
-      logger.info(`File successfully renamed. Original filename: ${originalName}, generated filename: ${newFileName}`);
 
       logger.info(`Form is valid. Send post request to record data`);
 
       const postResponse = await axios
-        .post(`${BASE_API_URL}/api/offers`, Object.assign({}, req.body, {avatar: newFileName}));
+        .post(`${BASE_API_URL}/articles`, Object.assign({}, req.body, {picture: newFileName}));
 
       logger.info(`Response status is ${postResponse.status}`);
 
@@ -86,6 +96,24 @@ articlesRouter
         next(new Error(`Invalid response status code: ${postResponse.status}`));
       }
     } catch (caughtError) {
+      if (caughtError instanceof InvalidFormException) {
+        logger.error(caughtError);
+
+        res.render(`articles/new-post`, {
+          title: `post-page`,
+          user: {
+            role: `author`
+          },
+          article: req.body
+        });
+
+        return;
+      }
+
+      if (caughtError.response) {
+        logger.error(`Post error: ${caughtError.response.data}`);
+      }
+
       next(caughtError);
     }
   });

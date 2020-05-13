@@ -13,7 +13,7 @@ let isCalled = false;
 
 class Articles {
   constructor() {
-    this._requiredArticlesFields = [`title`, `announce`, `fullText`, `createdDate`, `category`];
+    this._requiredArticlesFields = [`title`, `announce`, `created`];
     this._commentRequiredFields = [`text`];
   }
 

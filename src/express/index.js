@@ -17,8 +17,14 @@ const TEMPLATES_DIR = `templates`;
 const app = express();
 
 app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
+app.use(express.json());
+app.use(express.text());
 
 app.use(httpLoggerMiddleware);
+app.use((req, res, next) => {
+  logger.info(`Incoming request ${req.originalUrl}`);
+  next();
+});
 
 app.set(`views`, path.resolve(__dirname, TEMPLATES_DIR));
 app.set(`view engine`, `pug`);
@@ -36,7 +42,7 @@ app.use((req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-  logger.error(`Error middleware. Internal error ${error}`);
+  logger.error(`Internal error. ${error}`);
 
   res.status(HttpCode.INTERNAL_ERROR).render(`errors/500`, {
     errorCode: HttpCode.INTERNAL_ERROR
