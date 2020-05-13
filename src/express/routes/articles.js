@@ -16,12 +16,29 @@ const {
 } = require(`../../constants`);
 
 const {
-  ARTICLES_PICTURES_DIR,
-  TMP_DIR
+  ARTICLES_PICTURES_DIR
 } = require(`../constants`);
 
+const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, ARTICLES_PICTURES_DIR);
+  },
+  filename(req, file, cb) {
+    cb(null, `${file.fieldname}-${Date.now()}`);
+  }
+});
+
 const upload = multer({
-  dest: TMP_DIR
+  storage,
+  fileFilter(req, file, cb) {
+    if (![`image/jpeg`, `image/png`, `image/webp`].includes(file.mimetype)) {
+      req.locals = {}; // @todo это норм?
+      req.locals.fileError = new InvalidFormException(`Bad file extension provided`);
+      cb(null, false);
+    } else {
+      cb(null, true);
+    }
+  }
 });
 
 const {Router} = require(`express`);
@@ -39,11 +56,11 @@ articlesRouter
     });
   })
   .post(`/add`, upload.single(`picture`), async (req, res, next) => {
-    let newFileName = null;
-    let newFilePath = null;
-    const requiredFields = [`title`, `announce`, `created`];
-
     try {
+      if (req.locals && req.locals.fileError) {
+        throw req.locals.fileError;
+      }
+
       if (req.body === undefined) {
         throw new Error(`Can't find body`);
       }
@@ -51,6 +68,8 @@ articlesRouter
       logger.debug({message: `Got body`, content: req.body});
 
       const keysFromForm = Object.keys(req.body);
+
+      const requiredFields = [`title`, `announce`, `created`];
 
       const areAllRequiredFieldsExist = requiredFields.every((requiredField) => keysFromForm.includes(requiredField));
 
@@ -60,6 +79,9 @@ articlesRouter
       }
 
       logger.debug(`Form fields are valid`);
+
+      let newFileName = null;
+      let newFilePath = null;
 
       if (req.file !== undefined) {
         logger.debug({message: `Got file`, content: req.file});
@@ -72,8 +94,8 @@ articlesRouter
           filename: generatedName
         } = req.file;
 
-        if (size === 0 || ![`image/jpeg`, `image/png`, `image/webp`].includes(mimeType)) {
-          throw new InvalidFormException(`Empty file or bad mime type. Size ${size}, mimetype: ${mimeType}`);
+        if (size === 0) {
+          throw new InvalidFormException(`Empty file. Size ${size}`);
         }
 
         newFileName = `${generatedName}.${mime.getExtension(mimeType)}`;

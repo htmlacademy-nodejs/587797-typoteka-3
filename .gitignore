@@ -25,3 +25,5 @@ src/express/logs/*.txt
 
 src/express/tmp/*
 !src/express/tmp/.gitkeep
+
+src/express/public/img/articles/picture-*
