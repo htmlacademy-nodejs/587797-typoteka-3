@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
     cb(null, ARTICLES_PICTURES_DIR);
   },
   filename(req, file, cb) {
-    cb(null, `${file.fieldname}-${Date.now()}`);
+    cb(null, `${file.fieldname}-${Date.now()}.${mime.getExtension(file.mimetype)}`);
   }
 });
 
@@ -56,9 +56,23 @@ articlesRouter
     });
   })
   .post(`/add`, upload.single(`picture`), async (req, res, next) => {
+    let newFileName = null;
+    let newFilePath = null;
+
     try {
       if (req.locals && req.locals.fileError) {
         throw req.locals.fileError;
+      }
+
+      if (req.file !== undefined) {
+        logger.debug({message: `Got file`, content: req.file});
+
+        if (req.file.size === 0) {
+          throw new InvalidFormException(`Empty file. Size ${req.file.size}`);
+        }
+
+        newFileName = req.file.filename;
+        newFilePath = req.file.path;
       }
 
       if (req.body === undefined) {
@@ -78,33 +92,6 @@ articlesRouter
         Required fields: ${requiredFields.toString()}`);
       }
 
-      logger.debug(`Form fields are valid`);
-
-      let newFileName = null;
-      let newFilePath = null;
-
-      if (req.file !== undefined) {
-        logger.debug({message: `Got file`, content: req.file});
-
-        const {
-          mimetype: mimeType,
-          size,
-          path: filePath,
-          originalname: originalName,
-          filename: generatedName
-        } = req.file;
-
-        if (size === 0) {
-          throw new InvalidFormException(`Empty file. Size ${size}`);
-        }
-
-        newFileName = `${generatedName}.${mime.getExtension(mimeType)}`;
-        newFilePath = path.resolve(ARTICLES_PICTURES_DIR, newFileName);
-
-        await fs.promises.rename(filePath, newFilePath);
-        logger.info(`File successfully renamed. Original filename: ${originalName}, generated filename: ${newFileName}`);
-      }
-
       logger.info(`Form is valid. Send post request to record data`);
 
       const postResponse = await axios
@@ -118,6 +105,20 @@ articlesRouter
         next(new Error(`Invalid response status code: ${postResponse.status}`));
       }
     } catch (caughtError) {
+      fs.access(newFilePath, async (error) => {
+        if (!error) {
+          await fs.unlink(newFilePath, (fileError) => {
+            if (fileError) {
+              logger.error(`Can't delete file ${newFilePath}, error: ${fileError}`);
+
+              return;
+            }
+
+            logger.info(`File ${newFilePath} successfully deleted`);
+          });
+        }
+      });
+
       if (caughtError instanceof InvalidFormException) {
         logger.error(caughtError);
 
