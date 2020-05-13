@@ -24,8 +24,6 @@ articlesRouter
     const newOffer = req.body;
     const response = await ArticlesRepository.create(newOffer);
 
-    console.log(response);
-
     if (response.isSuccess) {
       res.status(HttpCode.SUCCESS_POST).send(response.body);
     } else {
