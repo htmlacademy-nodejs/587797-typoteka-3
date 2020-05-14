@@ -1,7 +1,7 @@
 'use strict';
 
 const {
-  HttpCode
+  HttpCode,
 } = require(`../../constants`);
 
 const {Router} = require(`express`);
