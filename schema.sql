@@ -5,29 +5,29 @@ DROP TABLE IF EXISTS public.posts CASCADE;
 DROP TABLE IF EXISTS public.users CASCADE;
 
 CREATE TABLE public.users (
-    user_id    bigint                              NOT NULL PRIMARY KEY,
-    email      character varying(256)              NOT NULL UNIQUE,
-    password   character varying(256)              NOT NULL,
-    name       character varying(256)              NOT NULL,
-    surname    character varying(256)              NOT NULL,
-    avatar     character varying(256)              NOT NULL,
-    created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
+    user_id    bigint       NOT NULL PRIMARY KEY,
+    email      VARCHAR(256) NOT NULL UNIQUE,
+    password   VARCHAR(256) NOT NULL,
+    name       VARCHAR(256) NOT NULL,
+    surname    VARCHAR(256) NOT NULL,
+    avatar     VARCHAR(256) NOT NULL,
+    created_at timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE public.categories (
-    category_id bigint                              NOT NULL PRIMARY KEY,
-    name        character varying(256)              NOT NULL,
-    created_at  timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
+    category_id bigint       NOT NULL PRIMARY KEY,
+    name        VARCHAR(256) NOT NULL,
+    created_at  timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE public.posts (
-    post_id      bigint                              NOT NULL PRIMARY KEY,
-    title        character varying(256)              NOT NULL,
-    announce     character varying(1000)             NOT NULL,
-    text         text                                NULL,
-    picture      character varying(256)              NOT NULL,
-    published_at timestamp                           NOT NULL,
-    created_at   timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL
+    post_id      bigint        NOT NULL PRIMARY KEY,
+    title        VARCHAR(256)  NOT NULL,
+    announce     VARCHAR(1000) NOT NULL,
+    text         text              NULL,
+    picture      VARCHAR(256)  NOT NULL,
+    published_at timestamp     NOT NULL,
+    created_at   timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE public.posts_categories (
