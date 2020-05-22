@@ -43,7 +43,7 @@ CREATE TABLE public.posts_comments (
     author_id  bigint NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
 );
 
-INSERT INTO users VALUES(1, 'email1@email.com', 'ad21d2a', 'name1', 'surname1', 'avatar1');
-INSERT INTO categories VALUES (1, 'books'), (2, 'sport'), (3, 'cars');
-INSERT INTO posts VALUES(1, 'title1', 'announce1', 'text1', 'picture1', '2020-01-02 01:02:03');
-INSERT INTO posts_categories VALUES(1, 1);
+-- INSERT INTO users VALUES(1, 'email1@email.com', 'ad21d2a', 'name1', 'surname1', 'avatar1');
+-- INSERT INTO categories VALUES (1, 'books'), (2, 'sport'), (3, 'cars');
+-- INSERT INTO posts VALUES(1, 'title1', 'announce1', 'text1', 'picture1', '2020-01-02 01:02:03');
+-- INSERT INTO posts_categories VALUES(1, 1);
