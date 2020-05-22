@@ -2,7 +2,7 @@
 
 const chalk = require(`chalk`);
 const express = require(`express`);
-const {getLogger} = require(`../../libs/logger`);
+const {getLogger, httpLoggerMiddleware} = require(`../libs/logger`);
 const logger = getLogger();
 
 const {
@@ -17,14 +17,11 @@ const DEFAULT_PORT = 3000;
 
 const app = express();
 app.use(express.json());
+
+app.use(httpLoggerMiddleware);
+
 app.use((req, res, next) => {
   logger.debug(`New request. Url: ${req.url}`);
-  const onResponseFinish = () => {
-    logger.info(`Request finished with code: ${res.statusCode}`);
-    logger.info(`All response info: ${res.toString()}`); // @todo как распечатать объект, чтобы не было All response info: [object Object]
-    res.removeListener(`finish`, onResponseFinish);
-  };
-  res.on(`finish`, onResponseFinish);
   next();
 });
 

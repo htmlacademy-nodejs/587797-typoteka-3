@@ -4,6 +4,11 @@ const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 const moment = require(`moment`);
 const {nanoid} = require(`nanoid`);
+const pictures = [
+  `sea@1x.webp`,
+  `skyscraper@1x.webp`,
+  `forest@1x.webp`
+];
 
 const {
   getRandomInt,
@@ -29,13 +34,15 @@ const generateOffers = (offersNumber, titles, categories, sentences, commentsTex
     announce: shuffleArray(sentences).slice(1, MAX_ANNOUNCE_VALUE).join(` `),
     fullText: shuffleArray(sentences).slice(1, sentences.length - 1).join(` `),
     createdDate: moment(Date.now() - getRandomInt(0, (MONTH_MILLISECONDS * 3))).format(`YYYY-MM-DD HH-mm-ss`),
-    category: shuffleArray(categories).slice(1, getRandomInt(1, categories.length - 1)),
-    comments: generateComments(getRandomInt(1, 5), commentsText)
+    categories: shuffleArray(categories).slice(0, getRandomInt(1, 3)),
+    comments: generateComments(getRandomInt(1, 5), commentsText),
+    picture: pictures[getRandomInt(0, pictures.length - 1)]
   }));
 };
 
 const generateComments = (count, commentsText) => {
   return Array(count).fill({}).map(() => {
+    // console.log(count, commentsText);
     return {
       id: nanoid(),
       text: shuffleArray(commentsText).slice(1, count).join(` `)
@@ -57,7 +64,8 @@ module.exports = {
     const titles = await readContent(FilePath.TITLES);
     const categories = await readContent(FilePath.CATEGORIES);
     const sentences = await readContent(FilePath.SENTENCES);
-    const commentsText = await readContent(FilePath.COMMENTS_TEXT);
+    let commentsText = await readContent(FilePath.COMMENTS_TEXT);
+    commentsText = commentsText.filter((text) => text.length > 0);
 
     try {
       await fs.writeFile(MOCK_FILE_PATH, JSON.stringify(generateOffers(offersNumber, titles, categories, sentences, commentsText)));

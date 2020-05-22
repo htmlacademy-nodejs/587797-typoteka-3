@@ -20,7 +20,10 @@ markup
 #ignore mocks.json file
 mocks.json
 
-src/express/public/img/articles/picture-*
-src/express/tmp/*
-src/express/logs/*.txt
 src/service/logs/*.txt
+src/express/logs/*.txt
+
+src/express/tmp/*
+!src/express/tmp/.gitkeep
+
+src/express/public/img/articles/picture-*

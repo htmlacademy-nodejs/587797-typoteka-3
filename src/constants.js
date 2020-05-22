@@ -1,5 +1,7 @@
 'use strict';
 
+const path = require(`path`);
+
 module.exports = {
   MONTH_MILLISECONDS: 2592000000,
   DEFAULT_COMMAND: `--help`,
@@ -32,5 +34,10 @@ module.exports = {
   ContentTypeRegExp: {
     HTML: /text\/html/,
     JSON: /application\/json/
+  },
+  BASE_API_URL: `http://localhost:3000/api`,
+  AppRoute: {
+    FRONT: path.resolve(__dirname, `express`),
+    API: path.resolve(__dirname, `service`)
   }
 };

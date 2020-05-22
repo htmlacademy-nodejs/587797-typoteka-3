@@ -3,10 +3,19 @@ extends ../layout
 block content
   main
     section.search-page
-      .search-page__wrapper
+      .search-page__wrapper(class={
+        'search-page__wrapper--empty': articles.length === 0 && search.length > 0
+      })
         h1 Поиск
         .search.search-page__form
-          form(action='#', method='get')
+          form(action='', method='get')
             label
-              input(type='text', placeholder='Что ищем?')
+              input(type='text', placeholder='Что ищем?', name='search', value=search)
             button.search__button.button.button--transparent(type='submit') Найти
+          each article in articles
+            .search__result
+              time.search__date(datetime=moment(article.createdDate, `YYYY-MM-DD HH:mm:ss`).format(`YYYY-MM-DDTHH:mm`))=moment(article.createdDate, `YYYY-MM-DD HH:mm:ss`).format(`DD.MM.YYYY, HH:mm`)
+              a.search__link=article.title
+              //- @todo подсветить найденный текст как в шаблоне
+        if articles.length === 0 && search.length > 0
+          p.search-page__empty Ничего не нашлось
