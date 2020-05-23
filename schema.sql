@@ -39,6 +39,7 @@ CREATE TABLE public.users (
     avatar     VARCHAR(256) NOT NULL,
     created_at timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE UNIQUE INDEX users_email ON public.users(email);
 
 CREATE SEQUENCE categories_sequence;
 CREATE TABLE public.categories (
@@ -57,6 +58,7 @@ CREATE TABLE public.posts (
     published_at timestamp     NOT NULL,
     created_at   timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+CREATE INDEX posts_title ON public.posts(title);
 
 CREATE TABLE public.posts_categories (
     post_id     bigint NOT NULL REFERENCES posts(post_id)          ON DELETE CASCADE,
