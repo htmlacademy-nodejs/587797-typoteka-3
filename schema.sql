@@ -28,49 +28,52 @@ DROP TABLE IF EXISTS public.users CASCADE;
 DROP SEQUENCE IF EXISTS users_sequence;
 DROP SEQUENCE IF EXISTS categories_sequence;
 DROP SEQUENCE IF EXISTS posts_sequence;
+DROP SEQUENCE IF EXISTS posts_comments_sequence;
 
 CREATE SEQUENCE users_sequence;
+CREATE SEQUENCE categories_sequence;
+CREATE SEQUENCE posts_sequence;
+CREATE SEQUENCE posts_comments_sequence;
+
 CREATE TABLE public.users (
-    user_id    bigint       NOT NULL PRIMARY KEY DEFAULT pseudo_encrypt(nextval('users_sequence')::int),
+    user_id    BIGINT       NOT NULL PRIMARY KEY DEFAULT pseudo_encrypt(nextval('users_sequence')::int),
     email      VARCHAR(256) NOT NULL,
     password   VARCHAR(256) NOT NULL,
     name       VARCHAR(256) NOT NULL,
     surname    VARCHAR(256) NOT NULL,
     avatar     VARCHAR(256) NOT NULL,
-    created_at timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE UNIQUE INDEX users_email ON public.users(email);
 
-CREATE SEQUENCE categories_sequence;
 CREATE TABLE public.categories (
-    category_id bigint       NOT NULL PRIMARY KEY DEFAULT pseudo_encrypt(nextval('categories_sequence')::int),
+    category_id BIGINT       NOT NULL PRIMARY KEY DEFAULT pseudo_encrypt(nextval('categories_sequence')::int),
     name        VARCHAR(256) NOT NULL,
-    created_at  timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE SEQUENCE posts_sequence;
 CREATE TABLE public.posts (
-    post_id      bigint        NOT NULL PRIMARY KEY DEFAULT pseudo_encrypt(nextval('posts_sequence')::int),
+    post_id      BIGINT        NOT NULL PRIMARY KEY DEFAULT pseudo_encrypt(nextval('posts_sequence')::int),
     title        VARCHAR(256)  NOT NULL,
     announce     VARCHAR(1000) NOT NULL,
-    text         text              NULL,
+    text         TEXT              NULL,
     picture      VARCHAR(256)  NOT NULL,
-    published_at timestamp     NOT NULL,
-    created_at   timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP
+    published_at TIMESTAMP     NOT NULL,
+    created_at   TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX posts_title ON public.posts(title);
 
-CREATE TABLE public.posts_categories (
-    post_id     bigint NOT NULL REFERENCES posts(post_id)          ON DELETE CASCADE,
-    category_id bigint NOT NULL REFERENCES categories(category_id) ON DELETE CASCADE,
-    PRIMARY KEY (post_id, category_id)
+CREATE TABLE public.posts_comments (
+    comment_id BIGINT NOT NULL PRIMARY KEY DEFAULT pseudo_encrypt(nextval('posts_sequence')::int),
+    text       TEXT   NOT NULL,
+    post_id    BIGINT NOT NULL REFERENCES posts(post_id) ON DELETE CASCADE,
+    author_id  BIGINT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
 );
 
-CREATE TABLE public.posts_comments (
-    comment_id bigint NOT NULL PRIMARY KEY,
-    text       text   NOT NULL,
-    post_id    bigint NOT NULL REFERENCES posts(post_id) ON DELETE CASCADE,
-    author_id  bigint NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
+CREATE TABLE public.posts_categories (
+    post_id     BIGINT NOT NULL REFERENCES posts(post_id)          ON DELETE CASCADE,
+    category_id BIGINT NOT NULL REFERENCES categories(category_id) ON DELETE CASCADE,
+    PRIMARY KEY (post_id, category_id)
 );
 
 -- INSERT INTO users(email, password, name, surname, avatar)
