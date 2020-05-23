@@ -32,7 +32,7 @@ DROP SEQUENCE IF EXISTS posts_sequence;
 CREATE SEQUENCE users_sequence;
 CREATE TABLE public.users (
     user_id    bigint       NOT NULL PRIMARY KEY DEFAULT pseudo_encrypt(nextval('users_sequence')::int),
-    email      VARCHAR(256) NOT NULL UNIQUE,
+    email      VARCHAR(256) NOT NULL,
     password   VARCHAR(256) NOT NULL,
     name       VARCHAR(256) NOT NULL,
     surname    VARCHAR(256) NOT NULL,
