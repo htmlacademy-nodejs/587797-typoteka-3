@@ -10,7 +10,8 @@
     "server": "nodemon ./src/service/service.js --server 3000 | pino-pretty",
     "server::debug": "LOG_LEVEL=debug NODE_ENV=development nodemon ./src/service/service.js --server 3000 | pino-pretty",
     "start-front-server": "nodemon ./src/express/index.js",
-    "test::rest": "jest"
+    "test::rest": "jest",
+    "fill-db": "node ./src/service/service.js --fill"
   },
   "repository": {
     "type": "git",

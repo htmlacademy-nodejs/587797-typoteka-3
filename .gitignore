@@ -27,3 +27,5 @@ src/express/tmp/*
 !src/express/tmp/.gitkeep
 
 src/express/public/img/articles/picture-*
+
+fill-db.sql
