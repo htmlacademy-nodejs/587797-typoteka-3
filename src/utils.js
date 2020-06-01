@@ -3,6 +3,8 @@
 const fs = require(`fs`).promises;
 const chalk = require(`chalk`);
 
+const getRandomElement = (arr) => arr[getRandomInt(0, arr.length - 1)];
+
 const getRandomInt = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -32,6 +34,7 @@ const readContent = async (filePath) => {
 };
 
 module.exports = {
+  getRandomElement,
   getRandomInt,
   shuffleArray,
   readContent
