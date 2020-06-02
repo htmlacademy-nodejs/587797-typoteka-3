@@ -55,7 +55,9 @@ class Creator {
     });
 
     for (let userId = 1; userId <= this._usersCount; userId++) {
-      builder.addUser(User.create(userId));
+      const role = userId === 1 ? `author` : `reader`;
+
+      builder.addUser(User.create(userId), role);
     }
 
     this._categories.forEach((categoryName, index) => {
@@ -65,7 +67,6 @@ class Creator {
 
     for (let postId = 1; postId <= this._postsCount; postId++) {
       const postsUserId = this._getRandomUserId();
-      const commentAuthorId = this._getRandomUserExclude(postsUserId);
 
       builder.addPost(Post.create(
           postId,
@@ -76,6 +77,7 @@ class Creator {
       ));
 
       for (let i = 0; i < getRandomInt(CommentsCount.MIN, CommentsCount.MAX); i++) {
+        const commentAuthorId = this._getRandomUserExclude(postsUserId);
         builder.addPostsComment(PostsComment.create(
             this._commentCounter,
             this._getRandomCommentText(),
