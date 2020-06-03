@@ -35,8 +35,12 @@ CREATE SEQUENCE categories_sequence;
 CREATE SEQUENCE posts_sequence;
 CREATE SEQUENCE posts_comments_sequence;
 
+DROP TYPE IF EXISTS user_role;
+CREATE TYPE user_role AS ENUM ('author', 'reader');
+
 CREATE TABLE public.users (
     user_id    BIGINT       NOT NULL PRIMARY KEY DEFAULT pseudo_encrypt(nextval('users_sequence')::int),
+    role       user_role    NOT NULL DEFAULT 'reader',
     email      VARCHAR(256) NOT NULL,
     password   VARCHAR(256) NOT NULL,
     name       VARCHAR(256) NOT NULL,
@@ -59,15 +63,17 @@ CREATE TABLE public.posts (
     text         TEXT              NULL,
     picture      VARCHAR(256)  NOT NULL,
     published_at TIMESTAMP     NOT NULL,
+    author_id    BIGINT        NOT NULL DEFAULT pseudo_encrypt(1) REFERENCES users(user_id) ON DELETE CASCADE,
     created_at   TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX posts_title ON public.posts(title);
 
 CREATE TABLE public.posts_comments (
-    comment_id BIGINT NOT NULL PRIMARY KEY DEFAULT pseudo_encrypt(nextval('posts_sequence')::int),
-    text       TEXT   NOT NULL,
-    post_id    BIGINT NOT NULL REFERENCES posts(post_id) ON DELETE CASCADE,
-    author_id  BIGINT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE
+    comment_id BIGINT    NOT NULL PRIMARY KEY DEFAULT pseudo_encrypt(nextval('posts_sequence')::int),
+    text       TEXT      NOT NULL,
+    post_id    BIGINT    NOT NULL REFERENCES posts(post_id) ON DELETE CASCADE,
+    author_id  BIGINT    NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE public.posts_categories (
@@ -75,13 +81,3 @@ CREATE TABLE public.posts_categories (
     category_id BIGINT NOT NULL REFERENCES categories(category_id) ON DELETE CASCADE,
     PRIMARY KEY (post_id, category_id)
 );
-
--- INSERT INTO users(email, password, name, surname, avatar)
---   VALUES('email1@email.com', 'ad21d2a', 'name1', 'surname1', 'avatar1');
-
--- INSERT INTO categories(name) VALUES ('books'), ('sport'), ('cars');
-
--- INSERT INTO posts(title, announce, text, picture, published_at)
---   VALUES('title1', 'announce1', 'text1', 'picture1', '2020-01-02 01:02:03');
-
--- INSERT INTO posts_categories VALUES(1, 1);
