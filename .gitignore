@@ -29,3 +29,5 @@ src/express/tmp/*
 src/express/public/img/articles/picture-*
 
 fill-db.sql
+
+.env
