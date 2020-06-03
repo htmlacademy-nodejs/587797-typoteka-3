@@ -57,7 +57,7 @@ class Creator {
     for (let userId = 1; userId <= this._usersCount; userId++) {
       const role = userId === 1 ? `author` : `reader`;
 
-      builder.addUser(User.create(userId), role);
+      builder.addUser(User.create(userId, role));
     }
 
     this._categories.forEach((categoryName, index) => {
