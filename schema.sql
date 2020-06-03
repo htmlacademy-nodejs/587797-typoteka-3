@@ -19,8 +19,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql strict immutable;
 
-CREATE TYPE user_role AS ENUM ('author', 'reader');
-
 DROP TABLE IF EXISTS public.posts_categories CASCADE;
 DROP TABLE IF EXISTS public.posts_comments CASCADE;
 DROP TABLE IF EXISTS public.categories CASCADE;
@@ -36,6 +34,9 @@ CREATE SEQUENCE users_sequence;
 CREATE SEQUENCE categories_sequence;
 CREATE SEQUENCE posts_sequence;
 CREATE SEQUENCE posts_comments_sequence;
+
+DROP TYPE IF EXISTS user_role;
+CREATE TYPE user_role AS ENUM ('author', 'reader');
 
 CREATE TABLE public.users (
     user_id    BIGINT       NOT NULL PRIMARY KEY DEFAULT pseudo_encrypt(nextval('users_sequence')::int),
