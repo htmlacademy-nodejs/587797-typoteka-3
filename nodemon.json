@@ -1,3 +1,6 @@
 {
+  "watch": [
+    ".env"
+  ],
   "ext": "pug,js"
 }
