@@ -12,8 +12,7 @@ let streams = [
 
 if (process.env.NODE_ENV === `development`) {
   streams = streams.concat([
-    {level: `debug`, stream: process.stdout},
-    {level: `error`, stream: process.stderr}
+    {level: `trace`, stream: process.stdout}
   ]);
 }
 

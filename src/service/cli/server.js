@@ -4,9 +4,11 @@ const chalk = require(`chalk`);
 const express = require(`express`);
 const {getLogger, httpLoggerMiddleware} = require(`../libs/logger`);
 const logger = getLogger();
+const db = require(`../db`);
 
 const {
   HttpCode,
+  ExitCode
 } = require(`../../constants`);
 
 const articlesRouter = require(`../routes/articles`);
@@ -44,7 +46,13 @@ module.exports = {
   async run(args) {
     const [customPort] = args;
     const port = Number(customPort) || DEFAULT_PORT;
+    const isSuccessBdConnect = await db.connect();
 
+    if (!isSuccessBdConnect) {
+      logger.error(`Db problem. Stop launching application...`);
+
+      process.exit(ExitCode.FAIL);
+    }
     app.listen(port, (error) => {
       if (error) {
         logger.error(chalk.green(`Can't launch server`, error));
